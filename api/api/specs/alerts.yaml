@@ -194,6 +194,7 @@ components:
   schemas:
     AlertMetric:
       type: string
+      example: "cpu_util"
       enum:
         - "throughput"
         - "latency95p"

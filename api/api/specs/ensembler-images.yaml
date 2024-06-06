@@ -108,6 +108,7 @@ components:
     EnsemblerImageRunnerType:
       type: string
       nullable: true
+      example: job
       enum:
         - job
         - service

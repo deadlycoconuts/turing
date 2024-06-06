@@ -291,6 +291,10 @@ components:
       type: "object"
       required:
         - type
+      example:
+        type: nop
+        config:
+          test-key: test-value
       properties:
         type:
           $ref: "#/components/schemas/ExperimentEngineType"

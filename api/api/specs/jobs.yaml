@@ -190,6 +190,7 @@ components:
 
     EnsemblerConfigKind:
       type: "string"
+      example: BatchEnsemblingJob
       enum:
         - BatchEnsemblingJob
 
@@ -247,6 +248,11 @@ components:
       type: "object"
       oneOf:
         - $ref: "#/components/schemas/BigQueryDataset"
+      example:
+        type: BQ
+        bq_config:
+          table: test-project.test_dataset.test_table
+          query: SELECT * FROM test_table
       discriminator:
         propertyName: "type"
         mapping:
@@ -331,6 +337,7 @@ components:
 
     EnsemblingJobResultType:
       type: "string"
+      example: FLOAT
       enum:
         - DOUBLE
         - FLOAT
@@ -341,6 +348,7 @@ components:
 
     SinkType: &SinkType
       type: "string"
+      example: CONSOLE
       enum:
         - CONSOLE
         - BQ
@@ -349,6 +357,13 @@ components:
       type: "object"
       oneOf:
         - $ref: "#/components/schemas/BigQuerySink"
+      example:
+        type: BQ
+        bq_config:
+          type: BQ
+          table: test-project.test_dataset.test_table
+          staging_bucket: test_bucket
+        save_mode: ERRORIFEXISTS
       discriminator:
         propertyName: "type"
         mapping:
@@ -401,6 +416,7 @@ components:
 
     SaveMode:
       type: "string"
+      example: ERRORIFEXISTS
       enum:
         - ERRORIFEXISTS
         - OVERWRITE

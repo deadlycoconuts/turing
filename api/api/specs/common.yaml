@@ -19,6 +19,7 @@ components:
 
     FieldSource:
       type: "string"
+      example: header
       enum:
         - "header"
         - "payload"
