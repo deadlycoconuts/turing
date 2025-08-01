@@ -53,6 +53,10 @@ jobs:
       - name: Run Tests
         working-directory: engines/pyfunc-ensembler-job
         run: |
+          if [[ "${GITHUB_REF##*/}" != "main" ]]; then
+            echo "Workflow not running on the main branch -> Running tests using SDK files from this branch..."
+            export OVERWRITE_VERSION="0.0.0"
+          fi
           make setup
           make test
 

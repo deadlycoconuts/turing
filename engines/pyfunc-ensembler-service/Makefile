@@ -8,7 +8,7 @@ ACTIVATE_ENV = source $$(conda info --base)/etc/profile.d/conda.sh ; conda activ
 setup: build
 	@conda env update -f env.yaml -n $(CONDA_ENV_NAME) --prune
 	@DIST_VERSION=$$(echo $(VERSION) | \
-		sed -E 's/^v([0-9]+\.[0-9]+\.[0-9]+)-rc([0-9]+)/\1rc\2/; s/^v([0-9]+\.[0-9]+\.[0-9]+)/\1/'); \
+		sed -E 's/^v([0-9]+\.[0-9]+\.[0-9]+)-rc([0-9]+)/\1rc\2/; s/^v([0-9]+\.[0-9]+\.[0-9]+)/\1/; s/^([0-9]+\.[0-9]+\.[0-9]+)-dev/\1.dev0/'); \
 		$(ACTIVATE_ENV) && pip install "dist/turing_pyfunc_ensembler_service-$${DIST_VERSION}-py3-none-any.whl[dev]"
 
 .PHONY: lint
@@ -45,7 +45,14 @@ version:
 build: version
 	@rm -rf build dist
 	@pip install "setuptools>=64,<75" "setuptools_scm>=8" "twine" "wheel"
-	@sed -i -e "s|turing-sdk.*|turing-sdk==$(VERSION)|g" ./requirements.txt
+	@if [ "$(VERSION)" = "0.0.0" ]; then \
+		echo "🔧 Using local turing-sdk source..."; \
+		sed -i -e "s|turing-sdk.*|turing-sdk @ file://$(abspath ../../sdk)|g" ./requirements.txt; \
+		sed -i -e "s|VERSION = \".*\"|VERSION = \"$(VERSION)\"|g" ../../sdk/turing/version.py; \
+	else \
+		echo "📦 Using turing-sdk version $(VERSION)..."; \
+		sed -i -e "s|turing-sdk.*|turing-sdk==$(VERSION)|g" ./requirements.txt; \
+	fi
 	@sed -i -e "s|VERSION = \".*\"|VERSION = \"$(VERSION)\"|g" ./version.py
 	@python setup.py sdist bdist_wheel
 
